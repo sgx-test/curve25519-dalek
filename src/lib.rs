@@ -29,13 +29,20 @@
 // External dependencies:
 //------------------------------------------------------------------------
 
-#[cfg(all(feature = "alloc", not(feature = "std")))]
-#[macro_use]
-extern crate alloc;
+#![cfg_attr(all(feature = "mesalock_sgx", not(target_env = "sgx")), no_std)]
+#![cfg_attr(all(target_env = "sgx", target_vendor = "mesalock"), feature(rustc_private))]
 
-#[cfg(feature = "std")]
+#[cfg(all(feature = "mesalock_sgx", not(target_env = "sgx")))]
 #[macro_use]
-extern crate std;
+extern crate sgx_tstd as std;
+
+//#[cfg(all(feature = "mesalock_sgx", not(target_env = "sgx")))]
+//#[macro_use]
+//extern crate sgx_alloc as alloc;
+
+//#[cfg(feature = "std")]
+//#[macro_use]
+//extern crate std;
 
 #[cfg(all(feature = "nightly", feature = "packed_simd"))]
 extern crate packed_simd;
