@@ -254,9 +254,10 @@
 #[macro_use]
 extern crate alloc;
 
-#[cfg(feature = "std")]
-#[macro_use]
-extern crate std;
+#[cfg(all(feature = "std", feature = "mesalock_sgx", target_env = "sgx"))]
+#[macro_use] extern crate std;
+#[cfg(all(feature = "std", feature = "mesalock_sgx", not(target_env = "sgx")))]
+#[macro_use] extern crate sgx_tstd as std;
 
 #[cfg(all(feature = "nightly", feature = "packed_simd"))]
 extern crate packed_simd;
