@@ -41,21 +41,24 @@ name = "dalek_benchmarks"
 harness = false
 
 [dependencies]
-rand_core = { version = "0.5", default-features = false }
-byteorder = { version = "^1.2.3", default-features = false, features = ["i128"] }
-digest = { version = "0.8", default-features = false }
-subtle = { version = "^2.2.1", default-features = false }
-serde = { version = "1.0", default-features = false, optional = true, features = ["derive"] }
+sgx_tstd = { rev = "v1.1.3", git = "https://github.com/apache/teaclave-sgx-sdk.git", optional = true }
+sgx_alloc = {  rev = "v1.1.3", git = "https://github.com/apache/teaclave-sgx-sdk.git", optional = true }
+rand_core = { git = "https://github.com/mesalock-linux/rand-sgx", default-features = false }
+byteorder = { git  = "https://github.com/sgx-test/ff-zeroize-sgx", version = "^1.2.3", features = ["i128"], default-features = false }
+digest = { git = "https://github.com/mesalock-linux/rustcrypto-traits-sgx.git", default-features = false }
+subtle = { git = "https://github.com/mesalock-linux/subtle-sgx", default-features = false }
+serde = { git = "https://github.com/mesalock-linux/serde-sgx", default-features = false, optional = true, features = ["derive"] }
 # The original packed_simd package was orphaned, see
 # https://github.com/rust-lang/packed_simd/issues/303#issuecomment-701361161
-packed_simd = { version = "0.3.4", package = "packed_simd_2", features = ["into_bits"], optional = true }
-zeroize = { version = "1", default-features = false }
+packed_simd = { git = "https://github.com/sgx-test/packed_simd-sgx", package = "packed_simd_2", features = ["into_bits"], optional = true }
+zeroize = { git = "https://github.com/sgx-test/ff-zeroize-sgx.git", default-features = false }
 
 [features]
 nightly = ["subtle/nightly"]
-default = ["std", "u64_backend"]
+default = ["mesalock_sgx", "u64_backend"]
 std = ["alloc", "subtle/std", "rand_core/std"]
 alloc = ["zeroize/alloc"]
+mesalock_sgx = ["sgx_tstd", "digest/mesalock_sgx"]
 
 # The u32 backend uses u32s with u64 products.
 u32_backend = []
